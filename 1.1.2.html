@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IGCSE ICT - 1.2.4 Backing Storage Quiz</title>
+    <style>
+        :root {
+            --bg-main: #090d16;
+            --bg-card: #131d31;
+            --border-color: #223354;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        header h1 {
+            color: var(--accent);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .quiz-status {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .score-pill {
+            background-color: #0c4a6e;
+            color: #7dd3fc;
+            padding: 0.35rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid #0284c7;
+        }
+
+        .card {
+            width: 100%;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            padding: 2rem;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            background-color: #1e293b;
+            color: var(--text-main);
+            padding: 1rem 1.25rem;
+            border-radius: 0.85rem;
+            border: 1px solid #334155;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #283548;
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: #064e3b !important;
+            border-color: #059669 !important;
+            color: #ecfdf5 !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: #7f1d1d !important;
+            border-color: #dc2626 !important;
+            color: #fee2e2 !important;
+        }
+
+        .feedback-box {
+            padding: 1.15rem;
+            border-radius: 0.85rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .feedback-box.correct-feedback {
+            background-color: #022c22;
+            border: 1px solid #047857;
+            color: #a7f3d0;
+        }
+
+        .feedback-box.incorrect-feedback {
+            background-color: #450a0a;
+            border: 1px solid #b91c1c;
+            color: #fecdd3;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #0f172a;
+            font-weight: 700;
+            padding: 0.85rem 1.75rem;
+            border-radius: 0.85rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .results-card {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .results-card h2 {
+            font-size: 2.25rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .results-card p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>IGCSE ICT Practice Quiz</h1>
+        <p>Topic 1.2.4 Backing Storage (Magnetic, Optical & Solid-State)</p>
+    </header>
+
+    <main>
+        <div class="quiz-status">
+            <span id="question-counter">Question 1 of 20</span>
+            <span id="score-display" class="score-pill">Score: 0</span>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="card">
+            <div id="question-box" class="question-text">
+                Loading question...
+            </div>
+
+            <div id="options-container" class="options-list">
+                <!-- Options populated dynamically -->
+            </div>
+
+            <div id="feedback-box" class="feedback-box hidden">
+                <!-- Feedback populated dynamically -->
+            </div>
+
+            <div style="display: flex; justify-content: flex-end;">
+                <button id="next-btn" onclick="nextQuestion()" class="btn-primary hidden">Next Question</button>
+            </div>
+        </div>
+
+        <!-- Results Container -->
+        <div id="results-container" class="card results-card hidden">
+            <h2>Quiz Completed! 🎉</h2>
+            <p id="final-score">You scored X out of 20</p>
+            <button onclick="restartQuiz()" class="btn-primary">Restart Quiz</button>
+        </div>
+    </main>
+
+    <footer>
+        IGCSE ICT Revision &bull; Main Components of Computer Systems (Backing Storage)
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the primary purpose of backing storage in a computer system?",
+                options: [
+                    { text: "To temporarily hold active program instructions currently being executed by the CPU", isCorrect: false, rationale: "Temporary execution holding is handled by RAM." },
+                    { text: "To provide non-volatile, permanent storage for large amounts of data, applications, and operating systems", isCorrect: true, rationale: "Backing storage provides non-volatile long-term retention of files and software." },
+                    { text: "To store permanent BIOS boot-up instructions that cannot be modified", isCorrect: false, rationale: "Permanent boot instructions are stored in ROM." },
+                    { text: "To convert physical sensor readings into binary digital values", isCorrect: false, rationale: "Signal conversion is performed by an ADC." }
+                ]
+            },
+            {
+                question: "Which of the following storage technologies uses spinning magnetic platters and mechanical read/write heads?",
+                options: [
+                    { text: "Solid-State Drive (SSD)", isCorrect: false, rationale: "SSDs use flash memory with no moving parts." },
+                    { text: "Hard Disk Drive (HDD)", isCorrect: true, rationale: "HDDs use magnetic platters and moving heads to read and write data." },
+                    { text: "Blu-ray Disc", isCorrect: false, rationale: "Blu-ray uses optical laser technology." },
+                    { text: "USB Flash Drive", isCorrect: false, rationale: "USB flash drives use semiconductor flash memory." }
+                ]
+            },
+            {
+                question: "How do Solid-State Drives (SSDs) store data compared to Hard Disk Drives (HDDs)?",
+                options: [
+                    { text: "Using magnetic fields on spinning metallic disks", isCorrect: false, rationale: "Magnetic disks are used by HDDs." },
+                    { text: "Using flash memory chips with no moving parts", isCorrect: true, rationale: "SSDs use electronic flash memory with zero moving parts." },
+                    { text: "Using microscopic pits and lands read by a red laser", isCorrect: false, rationale: "Pits and lands are used in optical media." },
+                    { text: "Using magnetic tape reels read sequentially", isCorrect: false, rationale: "Magnetic tape is used for archiving." }
+                ]
+            },
+            {
+                question: "What is a major advantage of Solid-State Drives (SSDs) over traditional Hard Disk Drives (HDDs)?",
+                options: [
+                    { text: "SSDs are significantly cheaper per gigabyte for massive storage capacities.", isCorrect: false, rationale: "HDDs generally offer lower cost per gigabyte for very large capacities." },
+                    { text: "SSDs have no moving parts, resulting in faster data access, lower power consumption, and greater shock resistance", isCorrect: true, rationale: "Solid-state technology makes SSDs faster, quieter, more durable, and energy-efficient." },
+                    { text: "SSDs rely on mechanical read/write heads that never wear out.", isCorrect: false, rationale: "HDDs use mechanical read/write heads." },
+                    { text: "SSDs require high-voltage magnetic motors to spin internal disks.", isCorrect: false, rationale: "SSDs do not have spinning motors." }
+                ]
+            },
+            {
+                question: "Which storage medium uses microscopic 'pits' and 'lands' burned or stamped onto a track, read by a laser beam?",
+                options: [
+                    { text: "Magnetic Hard Disk", isCorrect: false, rationale: "Hard disks use magnetic magnetism." },
+                    { text: "Optical Storage (CD/DVD/Blu-ray)", isCorrect: true, rationale: "Optical media use laser light to read reflective pits and lands." },
+                    { text: "Solid-State Memory", isCorrect: false, rationale: "Solid-state memory uses electronic transistors." },
+                    { text: "Magnetic Tape", isCorrect: false, rationale: "Magnetic tape uses coated plastic ribbon." }
+                ]
+            },
+            {
+                question: "What is the typical approximate storage capacity of a standard standard CD-ROM?",
+                options: [
+                    { text: "4.7 GB", isCorrect: false, rationale: "4.7 GB is the capacity of a standard DVD." },
+                    { text: "700 MB", isCorrect: true, rationale: "Standard CDs hold approximately 700 megabytes of data." },
+                    { text: "25 GB", isCorrect: false, rationale: "25 GB is the capacity of a single-layer Blu-ray disc." },
+                    { text: "1 TB", isCorrect: false, rationale: "1 TB is typical for modern hard drives or SSDs." }
+                ]
+            },
+            {
+                question: "What is the typical approximate storage capacity of a standard single-layer DVD?",
+                options: [
+                    { text: "700 MB", isCorrect: false, rationale: "700 MB is CD capacity." },
+                    { text: "4.7 GB", isCorrect: true, rationale: "Standard DVDs hold approximately 4.7 gigabytes of data." },
+                    { text: "25 GB", isCorrect: false, rationale: "25 GB is Blu-ray capacity." },
+                    { text: "500 GB", isCorrect: false, rationale: "500 GB is hard drive capacity." }
+                ]
+            },
+            {
+                question: "Which optical media format offers the largest storage capacity, making it suitable for high-definition (HD) movies?",
+                options: [
+                    { text: "CD-ROM", isCorrect: false, rationale: "CDs hold 700 MB." },
+                    { text: "DVD-ROM", isCorrect: false, rationale: "DVDs hold 4.7 GB." },
+                    { text: "Blu-ray Disc", isCorrect: true, rationale: "Blu-ray discs use a blue-violet laser allowing capacities of 25 GB or more." },
+                    { text: "Magnetic Tape", isCorrect: false, rationale: "Magnetic tape is not an optical disc format." }
+                ]
+            },
+            {
+                question: "What is the difference between CD-R and CD-RW formats?",
+                options: [
+                    { text: "CD-R can be written to once and read many times, whereas CD-RW can be written to and erased multiple times", isCorrect: true, rationale: "CD-R stands Recordable (write-once), while CD-RW stands for Rewritable." },
+                    { text: "CD-R is volatile, whereas CD-RW is non-volatile.", isCorrect: false, rationale: "Both optical formats are non-volatile backing storage." },
+                    { text: "CD-R holds 25 GB, whereas CD-RW holds only 700 MB.", isCorrect: false, rationale: "Both CD formats have approximately 700 MB capacity." },
+                    { text: "CD-R uses magnetic tape, whereas CD-RW uses flash memory.", isCorrect: false, rationale: "Both are optical disc technologies." }
+                ]
+            },
+            {
+                question: "Why is magnetic tape still used for backing storage in large organizations despite being very slow for data retrieval?",
+                options: [
+                    { text: "It allows random access to files in milliseconds.", isCorrect: false, rationale: "Magnetic tape uses sequential access." },
+                    { text: "It provides extremely high storage capacity at a very low cost per gigabyte, making it ideal for long-term backups and archiving", isCorrect: true, rationale: "Tape cassettes offer massive capacities at low cost, perfect for batch backups and historical archives." },
+                    { text: "It can be plugged directly into USB ports on smartphones.", isCorrect: false, rationale: "Magnetic tape requires specialized tape drives." },
+                    { text: "It runs faster than solid-state drives.", isCorrect: false, rationale: "Tape access is slow due to sequential winding." }
+                ]
+            },
+            {
+                question: "What does 'sequential access' mean in the context of magnetic tape storage?",
+                options: [
+                    { text: "Data can be accessed instantly from any random location on the tape.", isCorrect: false, rationale: "Random access describes HDDs, SSDs, and RAM." },
+                    { text: "To reach a specific piece of data, the tape must be wound forward or backward past all preceding data", isCorrect: true, rationale: "Sequential access requires reading through previous records linearly, making search times slower." },
+                    { text: "Data is written in encrypted code blocks.", isCorrect: false, rationale: "Encryption is independent of access method." },
+                    { text: "Data is erased automatically after 24 hours.", isCorrect: false, rationale: "Tape data is permanent until overwritten." }
+                ]
+            },
+            {
+                question: "What is the primary advantage of 'random access' storage devices like hard disks and SSDs over magnetic tape?",
+                options: [
+                    { text: "They can locate and access any stored data file directly without having to read through preceding files", isCorrect: true, rationale: "Random access allows the read head or controller to jump directly to any storage address instantly." },
+                    { text: "They are completely immune to physical damage.", isCorrect: false, rationale: "All storage devices can suffer physical wear or damage." },
+                    { text: "They cost nothing to manufacture.", isCorrect: false, rationale: "Manufacturing costs vary." },
+                    { text: "They have unlimited storage capacity.", isCorrect: false, rationale: "Capacities are finite." }
+                ]
+            },
+            {
+                question: "Which backing storage device is most portable, lightweight, and widely used for transferring files between different computers via USB ports?",
+                options: [
+                    { text: "Internal Hard Disk Drive", isCorrect: false, rationale: "Internal HDDs are mounted securely inside computer chassis." },
+                    { text: "USB Flash Drive (Memory Stick)", isCorrect: true, rationale: "USB flash drives use solid-state flash memory in small portable pocket-sized casings." },
+                    { text: "Mainframe Magnetic Tape Reel", isCorrect: false, rationale: "Tape reels are bulky and used in server rooms." },
+                    { text: "Server Hard Disk Array", isCorrect: false, rationale: "Disk arrays are heavy stationary equipment." }
+                ]
+            },
+            {
+                question: "What type of storage is a memory card (such as SD or MicroSD cards) used in digital cameras and mobile phones?",
+                options: [
+                    { text: "Magnetic storage", isCorrect: false, rationale: "Memory cards do not use magnets." },
+                    { text: "Optical storage", isCorrect: false, rationale: "Memory cards do not use lasers or discs." },
+                    { text: "Solid-state flash memory", isCorrect: true, rationale: "Memory cards use NAND flash memory chips to store data securely without power." },
+                    { text: "Punch card storage", isCorrect: false, rationale: "Punch cards are obsolete paper media." }
+                ]
+            },
+            {
+                question: "Which of the following backing storage options has the highest cost per gigabyte?",
+                options: [
+                    { text: "Magnetic Hard Disk Drive (HDD)", isCorrect: false, rationale: "HDDs have a very low cost per gigabyte." },
+                    { text: "Solid-State Drive (SSD) / USB Flash Memory", isCorrect: true, rationale: "Solid-state memory typically has a higher cost per gigabyte compared to large capacity magnetic hard disks." },
+                    { text: "Magnetic Tape Cartridge", isCorrect: false, rationale: "Tape has an extremely low cost per gigabyte." },
+                    { text: "DVD-R Disc", isCorrect: false, rationale: "Individual optical discs are inexpensive, but their capacity per dollar is limited compared to HDDs." }
+                ]
+            },
+            {
+                question: "Why might a backing storage device be described as 'non-volatile'?",
+                options: [
+                    { text: "Because it deletes all stored files instantly when the computer is turned off.", isCorrect: false, rationale: "Deleting data upon power loss describes volatile memory." },
+                    { text: "Because it retains all stored data and programs permanently even when electrical power is removed", isCorrect: true, rationale: "Non-volatile backing storage keeps data safe without needing continuous electrical power." },
+                    { text: "Because it requires a lithium battery to function.", isCorrect: false, rationale: "Backing storage does not depend on backup batteries for data retention." },
+                    { text: "Because it can only be read once before self-destructing.", isCorrect: false, rationale: "This is a fictional scenario." }
+                ]
+            },
+            {
+                question: "What is 'Virtual Memory' in a computer system?",
+                options: [
+                    { text: "A hologram display projected above the keyboard", isCorrect: false, rationale: "Virtual memory is a storage management technique, not a hologram." },
+                    { text: "A portion of backing storage (HDD or SSD) used by the operating system as an extension of physical RAM when RAM is full", isCorrect: true, rationale: "When RAM runs out of space, the OS temporarily moves inactive data to backing storage as virtual memory." },
+                    { text: "Cloud storage hosted on internet servers", isCorrect: false, rationale: "Cloud storage is remote networked storage." },
+                    { text: "Read-Only Memory chips soldered onto the motherboard", isCorrect: false, rationale: "ROM is physical internal memory." }
+                ]
+            },
+            {
+                question: "What is a disadvantage of using Virtual Memory when physical RAM is insufficient?",
+                options: [
+                    { text: "It causes the computer to run slower because backing storage access speeds are much slower than physical RAM", isCorrect: true, rationale: "Constantly swapping data between backing storage and RAM (paging/thrashing) degrades system performance." },
+                    { text: "It permanently erases the operating system boot files.", isCorrect: false, rationale: "Virtual memory does not erase boot files." },
+                    { text: "It converts digital data into analogue sound waves.", isCorrect: false, rationale: "Conversion is done by DACs." },
+                    { text: "It requires an Analogue-to-Digital Converter.", isCorrect: false, rationale: "Converters are for sensor signals." }
+                ]
+            },
+            {
+                question: "Which backing storage media is most vulnerable to data corruption if exposed to strong magnetic fields?",
+                options: [
+                    { text: "Optical CD-ROM", isCorrect: false, rationale: "Optical discs are unaffected by magnetic fields." },
+                    { text: "Solid-State USB Drive", isCorrect: false, rationale: "Flash memory uses electrical charges, not magnetism." },
+                    { text: "Magnetic Hard Disk Drive and Magnetic Tape", isCorrect: true, rationale: "Magnetic storage media store data using magnetic polarities, which can be disrupted by strong external magnets." },
+                    { text: "Read-Only Memory chip", isCorrect: false, rationale: "ROM chips are semiconductor integrated circuits." }
+                ]
+            },
+            {
+                question: "When purchasing a new laptop, a user is choosing between a 1 TB HDD and a 512 GB SSD. What is the main trade-off they are making?",
+                options: [
+                    { text: "The HDD offers more storage space for less money, whereas the SSD offers significantly faster boot and load times with greater durability", isCorrect: true, rationale: "HDD gives higher capacity at lower cost, while SSD gives superior speed and shock resistance at a higher cost per GB." },
+                    { text: "The SSD is magnetic, whereas the HDD uses optical lasers.", isCorrect: false, rationale: "This is factually incorrect." },
+                    { text: "The HDD is volatile, whereas the SSD is non-volatile.", isCorrect: false, rationale: "Both are non-volatile backing storage." },
+                    { text: "The SSD requires sequential access, whereas the HDD uses random access.", isCorrect: false, rationale: "Both use random access." }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionCounter = document.getElementById("question-counter");
+        const scoreDisplay = document.getElementById("score-display");
+        const questionBox = document.getElementById("question-box");
+        const optionsContainer = document.getElementById("options-container");
+        const feedbackBox = document.getElementById("feedback-box");
+        const nextBtn = document.getElementById("next-btn");
+        const quizContainer = document.getElementById("quiz-container");
+        const resultsContainer = document.getElementById("results-container");
+        const finalScore = document.getElementById("final-score");
+
+        function loadQuestion() {
+            answered = false;
+            feedbackBox.classList.add("hidden");
+            nextBtn.classList.add("hidden");
+
+            const q = questions[currentQuestionIndex];
+            questionCounter.textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            scoreDisplay.textContent = `Score: ${score}`;
+            questionBox.textContent = q.question;
+
+            optionsContainer.innerHTML = "";
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = opt.text;
+                btn.onclick = () => selectOption(idx);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestionIndex];
+            const allOptionButtons = optionsContainer.children;
+
+            q.options.forEach((opt, idx) => {
+                allOptionButtons[idx].disabled = true;
+                if (opt.isCorrect) {
+                    allOptionButtons[idx].classList.add("correct");
+                } else if (idx === selectedIndex) {
+                    allOptionButtons[idx].classList.add("incorrect");
+                }
+            });
+
+            const selectedOpt = q.options[selectedIndex];
+            feedbackBox.classList.remove("hidden");
+            if (selectedOpt.isCorrect) {
+                score++;
+                scoreDisplay.textContent = `Score: ${score}`;
+                feedbackBox.className = "feedback-box correct-feedback";
+                feedbackBox.innerHTML = `<strong>Correct!</strong> ${selectedOpt.rationale}`;
+            } else {
+                feedbackBox.className = "feedback-box incorrect-feedback";
+                feedbackBox.innerHTML = `<strong>Incorrect.</strong> ${selectedOpt.rationale}`;
+            }
+
+            if (currentQuestionIndex < questions.length - 1) {
+                nextBtn.textContent = "Next Question";
+            } else {
+                nextBtn.textContent = "View Results";
+            }
+            nextBtn.classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                quizContainer.classList.add("hidden");
+                resultsContainer.classList.remove("hidden");
+                finalScore.textContent = `You scored ${score} out of ${questions.length}`;
+            }
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultsContainer.classList.add("hidden");
+            quizContainer.classList.remove("hidden");
+            loadQuestion();
+        }
+
+        // Initialize quiz on load
+        loadQuestion();
+    </script>
+</body>
+</html>
